@@ -16,9 +16,6 @@
 
 package com.google.android.libraries.cast.companionlibrary.widgets;
 
-import com.google.android.libraries.cast.companionlibrary.R;
-import com.google.android.libraries.cast.companionlibrary.utils.Utils;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -51,6 +48,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.google.android.libraries.cast.companionlibrary.R;
+import com.google.android.libraries.cast.companionlibrary.utils.Utils;
 
 /**
  * A simple overlay view that can be used to bring user's attention to the cast button. To use
@@ -94,6 +94,7 @@ public class IntroductoryOverlay extends RelativeLayout {
     private static final String ALPHA_PROPERTY = "alpha";
     private static final float INVISIBLE_VALUE = 0f;
     private OnOverlayDismissedListener mListener;
+    private final ViewGroup contentView;
 
     private IntroductoryOverlay(Builder builder) {
         this(builder, null, R.styleable.CustomTheme_CCLIntroOverlayStyle);
@@ -108,6 +109,8 @@ public class IntroductoryOverlay extends RelativeLayout {
         mButton = (Button) findViewById(R.id.button);
         mTitleText = (TextView) findViewById(R.id.textTitle);
         mSubtitleText = (TextView) findViewById(R.id.textSubtitle);
+        contentView = (ViewGroup) ((Activity) getContext()).findViewById(android.R.id.content);
+
         TypedArray typedArray = getContext().getTheme()
                 .obtainStyledAttributes(attrs, R.styleable.CCLIntroOverlay,
                         R.attr.CCLIntroOverlayStyle, R.style.CCLIntroOverlay);
@@ -148,7 +151,7 @@ public class IntroductoryOverlay extends RelativeLayout {
         }
         if (!mIsOverlayVisible) {
             mIsOverlayVisible = true;
-            ((ViewGroup) ((Activity) getContext()).getWindow().getDecorView()).addView(this);
+            contentView.addView(this);
         }
     }
 
@@ -160,7 +163,7 @@ public class IntroductoryOverlay extends RelativeLayout {
      */
     public void remove() {
         if (getContext() != null) {
-            ((ViewGroup) ((Activity) getContext()).getWindow().getDecorView()).removeView(this);
+            contentView.removeView(this);
         }
         if (mBitmap != null && !mBitmap.isRecycled()) {
             mBitmap.recycle();
